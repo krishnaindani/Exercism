@@ -10,18 +10,18 @@ func New(hout, minute int) Clock {
 }
 
 //String return representation of the clock
-func (c *Clock) String() string {
+func (c Clock) String() string {
 	return ""
 }
 
 //Add adds minutes to the clock
-func (c *Clock) Add(minutes int) Clock {
+func (c Clock) Add(minutes int) Clock {
 	var cl Clock
 	return cl
 }
 
 //Subtract subtracts the minutes from clock
-func (c *Clock) Subtract(minutes int) Clock {
+func (c Clock) Subtract(minutes int) Clock {
 	var cl Clock
 	return cl
 }
