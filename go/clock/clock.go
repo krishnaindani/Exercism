@@ -1,27 +1,32 @@
 package clock
 
+import "fmt"
+
 //Clock type
 type Clock int
 
 //New created a new clock
-func New(hout, minute int) Clock {
-	var c Clock
-	return c
+func New(hour, minute int) Clock {
+	c := (hour*60 + minute) % (24 * 60)
+	if c < 0 {
+		c += (24 * 60)
+	}
+	return Clock(c)
 }
 
 //String return representation of the clock
 func (c Clock) String() string {
-	return ""
+	return fmt.Sprintf("%02d:%02d", c/60, c%60)
 }
 
 //Add adds minutes to the clock
 func (c Clock) Add(minutes int) Clock {
-	var cl Clock
+	cl := New(0, int(c)+minutes)
 	return cl
 }
 
-//Subtract subtracts the minutes from clock
+//Subtract adds minutes to the clock
 func (c Clock) Subtract(minutes int) Clock {
-	var cl Clock
+	cl := New(0, int(c)-minutes)
 	return cl
 }
