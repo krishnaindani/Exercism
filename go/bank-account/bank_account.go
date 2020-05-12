@@ -4,7 +4,7 @@ import "sync"
 
 //Account struct
 type Account struct {
-	sync.Mutex
+	sync.RWMutex
 	balance int64
 	open    bool
 }
@@ -38,8 +38,8 @@ func (a *Account) Close() (payout int64, ok bool) {
 
 //Balance returns the balance
 func (a *Account) Balance() (balance int64, ok bool) {
-	a.Lock()
-	defer a.Unlock()
+	a.RLock()
+	defer a.RUnlock()
 	if a.open == false {
 		a.balance = 0
 		return 0, false
