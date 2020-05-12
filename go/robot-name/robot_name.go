@@ -29,9 +29,9 @@ func (r *Robot) Name() (string, error) {
 		return "", errors.New("error: names exhausted")
 	}
 
-	r.name = generateName()
+	r.name = newName()
 	for names[r.name] {
-		r.name = generateName()
+		r.name = newName()
 	}
 
 	names[r.name] = true
@@ -44,29 +44,9 @@ func (r *Robot) Reset() {
 	r.name = ""
 }
 
-func checkName(name string) bool {
-	if _, ok := names[name]; ok {
-		return false
-	}
-	return true
-}
-
-func generateName() string {
-	name := randLetters() + randNumbers()
-	return name
-}
-
-//randLetters generated random letters
-func randLetters() string {
-	letters := []rune("ABCDEFGHIJKLMNOPQRSTUVXWYZ")
-	n := make([]rune, 2)
-	for i := range n {
-		n[i] = letters[rand.Intn(len(letters))]
-	}
-	return string(n)
-}
-
-//randNumbers generated ramdom number
-func randNumbers() string {
-	return fmt.Sprintf("%03d", rand.Intn(1000))
+func newName() string {
+	r1 := rand.Intn(26) + 'A'
+	r2 := rand.Intn(26) + 'A'
+	num := rand.Intn(1000)
+	return fmt.Sprintf("%c%c%03d", r1, r2, num)
 }
