@@ -21,12 +21,11 @@ func (c Clock) String() string {
 
 //Add adds minutes to the clock
 func (c Clock) Add(minutes int) Clock {
-	cl := New(0, int(c)+minutes)
-	return cl
+	return New(0, int(c)+minutes)
 }
 
 //Subtract adds minutes to the clock
 func (c Clock) Subtract(minutes int) Clock {
-	cl := New(0, int(c)-minutes)
-	return cl
+	return New(0, int(c)-minutes)
+
 }
