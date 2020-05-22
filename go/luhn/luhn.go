@@ -9,17 +9,13 @@ import (
 func Valid(number string) bool {
 	//strip the spaces
 	number = strings.ReplaceAll(number, " ", "")
-	l := len(number)
-	if l < 2 {
+	if len(number) < 2 {
 		return false
 	}
 
 	var toDouble bool
 	var total int
-
-	if l%2 == 0 {
-		toDouble = true
-	}
+	toDouble = len(number)%2 == 0
 
 	for _, r := range number {
 		n, err := strconv.Atoi(string(r))
