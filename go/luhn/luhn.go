@@ -19,16 +19,10 @@ func Valid(number string) bool {
 		return false
 	}
 
-	//convert string to int
-	numberInt := make([]int, l)
-	for i, v := range number {
-		numberInt[i], _ = strconv.Atoi(string(v))
-	}
-
 	var toDouble bool
 	var total int
 	for i := l - 1; i >= 0; i-- {
-		n := numberInt[i]
+		n, _ := strconv.Atoi(string(number[i]))
 		if toDouble {
 			double := n * 2
 			if double > 9 {
