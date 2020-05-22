@@ -16,8 +16,13 @@ func Valid(number string) bool {
 
 	var toDouble bool
 	var total int
-	for i := l - 1; i >= 0; i-- {
-		n, err := strconv.Atoi(string(number[i]))
+
+	if l%2 == 0 {
+		toDouble = true
+	}
+
+	for _, r := range number {
+		n, err := strconv.Atoi(string(r))
 		if err != nil {
 			return false
 		}
