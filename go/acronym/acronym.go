@@ -2,6 +2,6 @@ package acronym
 
 // Abbreviate should have a comment documenting it.
 func Abbreviate(s string) string {
-
-	return ""
+	var short string
+	return short
 }
