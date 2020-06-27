@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-//IsNumber ...
+//IsNumber rerturns bool depending on if the given number is armstrong or not
 func IsNumber(number int) bool {
 	s := strings.Split(strconv.Itoa(number), "")
 
