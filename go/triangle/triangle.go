@@ -5,6 +5,8 @@
 // https://golang.org/doc/effective_go.html#commentary
 package triangle
 
+import "math"
+
 //Kind ...
 type Kind string
 
@@ -25,24 +27,19 @@ func KindFromSides(a, b, c float64) Kind {
 	// Then remove all the stock comments.
 	// They're here to help you get started but they only clutter a finished solution.
 	// If you leave them in, reviewers may protest!
-	var k Kind
+	if (a <= 0 || b <= 0 || c <= 0) || (math.IsNaN(a) || math.IsInf(a, 1) || math.IsNaN(b) || math.IsInf(b, 1) || math.IsNaN(c) || math.IsInf(c, 1)) {
+		return NaT
+	}
 
 	if a+b >= c && b+c >= a && c+a >= b {
-		if a == b && b == c {
-			if a == 0 && b == 0 && c == 0 || (a < 0 || b < 0 || c < 0) {
-				k = NaT
-				return k
-			}
-			k = Equ
-			return k
-		} else if (a == b) || (b == c) || (c == a) {
-			k = Iso
-			return k
-		} else if (a != b) || (b != c) || (c != a) {
-			k = Sca
-			return k
+		switch {
+		case a == b && b == c && c == a:
+			return Equ
+		case (a == b) || (b == c) || (c == a):
+			return Iso
+		case (a != b) || (b != c) || (c != a):
+			return Sca
 		}
 	}
-	k = NaT
-	return k
+	return NaT
 }
