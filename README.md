@@ -1,3 +1,3 @@
-# Exercism Go Trach Solutions
+# Exercism Go Track Solutions
 
 Solutions for Exercism Go track
