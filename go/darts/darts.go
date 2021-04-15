@@ -33,3 +33,19 @@ func inOrOnCircle(center, coordinates []float64, radius float64) bool {
 		math.Pow(coordinates[1]-center[1], 2)) <=
 		math.Pow(radius, 2)
 }
+
+func ScoreV2(x, y float64) int {
+
+	value := (x * x) + (y * y)
+
+	switch {
+	case value <= 1:
+		return 10
+	case value <= 25:
+		return 5
+	case value <= 100:
+		return 1
+	default:
+		return 0
+	}
+}

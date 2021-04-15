@@ -16,10 +16,30 @@ func TestScore(t *testing.T) {
 	}
 }
 
+func TestScoreV2(t *testing.T) {
+	for _, tc := range testCases {
+		t.Run(tc.description, func(t *testing.T) {
+			actual := ScoreV2(tc.x, tc.y)
+			if actual != tc.expected {
+				t.Errorf("Score(%#v, %#v) = %#v, want: %#v",
+					tc.x, tc.y, actual, tc.expected)
+			}
+		})
+	}
+}
+
 func BenchmarkScore(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		for _, tc := range testCases {
 			Score(tc.x, tc.y)
+		}
+	}
+}
+
+func BenchmarkScoreV2(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		for _, tc := range testCases {
+			ScoreV2(tc.x, tc.y)
 		}
 	}
 }
