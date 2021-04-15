@@ -1,2 +1,3 @@
-# Exercism
-Solutions for Exercism tracks
+# Exercism Go Track Solutions
+
+Solutions for Exercism Go track
