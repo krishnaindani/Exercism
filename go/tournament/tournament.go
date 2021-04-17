@@ -1,126 +1,101 @@
 package tournament
 
 import (
-	"errors"
+	"bufio"
 	"fmt"
 	"io"
-	"io/ioutil"
+	"sort"
 	"strings"
 )
 
 type stats struct {
-	matchedPlayed int
+	name          string
+	matchesPlayed int
 	win           int
 	draw          int
-	lose          int
+	loss          int
 	points        int
 }
 
-type teamStats struct {
-	AllegoricAlaskians     stats
-	DevastatingDonkeys     stats
-	BlitheringBadgers      stats
-	CourageousCalifornians stats
-}
-
-type (
-	m map[string]stats
-)
+type scoreBoard map[string]stats
 
 //Tally tallies the matches
 func Tally(r io.Reader, w io.Writer) error {
 
-	s, err := ioutil.ReadAll(r)
-	if err != nil {
-		return errors.New("error reading input data")
-	}
-
-	t := teamStats{
-		AllegoricAlaskians:     stats{},
-		DevastatingDonkeys:     stats{},
-		BlitheringBadgers:      stats{},
-		CourageousCalifornians: stats{},
-	}
-
-	c := strings.Split(string(s), "\n")
-
-	for _, element := range c {
-		var a []string
-		a = strings.Split(string(element), ";")
-		if len(a) > 1 {
-			status := a[2]
-			team := a[0]
-			secondTeam := a[1]
-
-			switch status {
-			case "win":
-				switch team {
-				case "Allegoric Alaskians":
-					t.AllegoricAlaskians.win++
-				case "Devastating Donkeys":
-					t.DevastatingDonkeys.win++
-				case "Courageous Californians":
-					t.CourageousCalifornians.win++
-				case "Blithering Badgers":
-					t.BlitheringBadgers.win++
-				}
-			case "loss":
-				switch team {
-				case "Allegoric Alaskians":
-					t.AllegoricAlaskians.lose++
-				case "Devastating Donkeys":
-					t.DevastatingDonkeys.lose++
-				case "Courageous Californians":
-					t.CourageousCalifornians.lose++
-				case "Blithering Badgers":
-					t.BlitheringBadgers.lose++
-				}
-			case "draw":
-				switch team {
-				case "Allegoric Alaskians":
-					t.AllegoricAlaskians.draw++
-				case "Devastating Donkeys":
-					t.DevastatingDonkeys.draw++
-				case "Courageous Californians":
-					t.CourageousCalifornians.draw++
-				case "Blithering Badgers":
-					t.BlitheringBadgers.draw++
-				}
-
-				switch secondTeam {
-				case "Allegoric Alaskians":
-					t.AllegoricAlaskians.draw++
-				case "Devastating Donkeys":
-					t.DevastatingDonkeys.draw++
-				case "Courageous Californians":
-					t.CourageousCalifornians.draw++
-				case "Blithering Badgers":
-					t.BlitheringBadgers.draw++
-				}
-			}
-			switch secondTeam {
-			case "Allegoric Alaskians":
-				t.AllegoricAlaskians.matchedPlayed++
-			case "Devastating Donkeys":
-				t.DevastatingDonkeys.matchedPlayed++
-			case "Courageous Californians":
-				t.CourageousCalifornians.matchedPlayed++
-			case "Blithering Badgers":
-				t.BlitheringBadgers.matchedPlayed++
-			}
-
-			switch team {
-			case "Allegoric Alaskians":
-				t.AllegoricAlaskians.matchedPlayed++
-			case "Devastating Donkeys":
-				t.DevastatingDonkeys.matchedPlayed++
-			case "Courageous Californians":
-				t.CourageousCalifornians.matchedPlayed++
-			case "Blithering Badgers":
-				t.BlitheringBadgers.matchedPlayed++
-			}
+	scanner := bufio.NewScanner(r)
+	sb := make(scoreBoard)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
 		}
+		fields := strings.Split(line, ";")
+		if len(fields) != 3 {
+			return fmt.Errorf("invalid game: %s", line)
+		}
+
+		teamA := fields[0]
+		teamB := fields[1]
+		status := fields[2]
+
+		teamAStats := sb[teamA]
+		teamBStats := sb[teamB]
+
+		teamAStats.name = teamA
+		teamBStats.name = teamB
+
+		teamAStats.matchesPlayed++
+		teamBStats.matchesPlayed++
+
+		switch status {
+		case "win":
+			teamAStats.points += 3
+			teamAStats.win++
+			teamBStats.loss++
+		case "loss":
+			teamAStats.loss++
+			teamBStats.points += 3
+			teamBStats.win++
+		case "draw":
+			teamAStats.points++
+			teamBStats.points++
+			teamAStats.draw++
+			teamBStats.draw++
+		default:
+			return fmt.Errorf("unknown condition: %s", line)
+		}
+
+		sb[teamA] = teamAStats
+		sb[teamB] = teamBStats
 	}
-	fmt.Printf("%+v", t)
+
+	allTeams := make([]stats, 0, len(sb))
+
+	for _, v := range sb {
+		allTeams = append(allTeams, v)
+	}
+
+	sort.Slice(allTeams, func(i, j int) bool {
+		if allTeams[i].points == allTeams[j].points {
+			return allTeams[i].name < allTeams[j].name
+		}
+		return allTeams[i].points > allTeams[j].points
+	})
+
+	header := "Team                           | MP |  W |  D |  L |  P"
+	fmtString := "%-31s| %2d | %2d | %2d | %2d | %2d\n"
+
+	fmt.Fprintln(w, header)
+	for _, team := range allTeams {
+		fmt.Fprintf(w, fmtString,
+			team.name,
+			team.matchesPlayed,
+			team.win,
+			team.draw,
+			team.loss,
+			team.points,
+		)
+	}
+
 	return nil
 }

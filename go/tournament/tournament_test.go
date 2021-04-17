@@ -23,7 +23,7 @@ var happyTestCases = []struct {
 	{
 		description: "good",
 		input: `
-Allegoric Allegoric;Blithering Badgers;win
+Allegoric Alaskians;Blithering Badgers;win
 Devastating Donkeys;Courageous Californians;draw
 Devastating Donkeys;Allegoric Alaskians;win
 Courageous Californians;Blithering Badgers;loss
