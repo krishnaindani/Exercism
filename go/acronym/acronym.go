@@ -7,10 +7,16 @@ import (
 // Abbreviate should have a comment documenting it.
 func Abbreviate(s string) string {
 	var short string
-	for _, v := range strings.FieldsFunc(s, func(c rune) bool {
+
+	f := func(c rune) bool {
 		return c == '_' || c == ' ' || c == '-'
-	}) {
+	}
+
+	words := strings.FieldsFunc(s, f)
+
+	for _, v := range words {
 		short += strings.ToUpper(string(v[0]))
 	}
+
 	return short
 }

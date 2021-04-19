@@ -1,30 +1,46 @@
 package allergies
 
-var products = map[uint]string{
-	1:   "eggs",
-	2:   "peanuts",
-	4:   "shellfish",
-	8:   "strawberries",
-	16:  "tomatoes",
-	32:  "chocolate",
-	64:  "pollen",
-	128: "cats",
+import "math"
+
+var substances = []string{
+	"eggs",
+	"peanuts",
+	"shellfish",
+	"strawberries",
+	"tomatoes",
+	"chocolate",
+	"pollen",
+	"cats",
 }
 
-//Allergies ...
+//Allergies take score and returns what all you are allergic to
 func Allergies(score uint) []string {
 	var product []string
-	if v, ok := products[score]; ok {
-		product = append(product, v)
-	} else {
-		evenValue := score / 2 
-		oddValue := score % 2 
-		
+
+	for i, sub := range substances {
+		if v := uint(math.Pow(2, float64(i))); v&score != 0 {
+			product = append(product, sub)
+		}
 	}
+
 	return product
 }
 
-//AllergicTo ...
+//AllergicTo takes score and substance and returns if you are allergic to that
 func AllergicTo(score uint, substance string) bool {
-	return false
+
+	index := -1
+	for i, v := range substances {
+		if v == substance {
+			index = i
+		}
+	}
+
+	if index == -1 {
+		return false
+	}
+
+	v := uint(math.Pow(2, float64(index)))
+
+	return v&score != 0
 }
